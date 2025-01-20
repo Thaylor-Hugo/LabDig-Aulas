@@ -35,6 +35,8 @@ exp3_unidade_controle controlUnit (
     .reset       (reset),
     .iniciar     (iniciar),
     .chavesIgualMemoria (db_igual),
+    .errou       (errou),
+    .acertou     (acertou),
     .fimC        (s_fim),
     .zeraC       (s_zeraC),
     .contaC      (s_conta),
@@ -77,9 +79,6 @@ hexa7seg display_estado (
     .hexa       (s_estado),
     .display    (db_estado)
 );
-
-assign errou = (~db_igual && s_fim);
-assign acertou = (db_igual && s_fim);
 
 assign db_iniciar = iniciar;
 

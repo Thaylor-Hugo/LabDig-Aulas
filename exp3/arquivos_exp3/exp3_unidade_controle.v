@@ -20,6 +20,8 @@ module exp3_unidade_controle (
     input      iniciar,
     input      fimC,
     input      chavesIgualMemoria,
+    output     errou,
+    output     acertou,
     output reg zeraC,
     output reg contaC,
     output reg zeraR,
@@ -83,5 +85,8 @@ module exp3_unidade_controle (
             default:     db_estado = 4'b1110;  // E (erro)
         endcase
     end
+
+    assign errou = (chavesIgualMemoria && (Eatual == fim));
+    assign acertou = (~chavesIgualMemoria && (Eatual == fim));
 
 endmodule
