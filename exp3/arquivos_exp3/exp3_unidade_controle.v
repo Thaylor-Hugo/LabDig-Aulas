@@ -38,6 +38,10 @@ module exp3_unidade_controle (
     // Variaveis de estado
     reg [3:0] Eatual, Eprox;
 
+    initial begin
+        Eatual = inicial;
+    end
+
     // Memoria de estado
     always @(posedge clock or posedge reset) begin
         if (reset)

@@ -110,6 +110,7 @@ module exp3_fluxo_dados_tb;
       contaC_in    = 1;
       #(clockPeriod);
       contaC_in    = 0;
+      #(clockPeriod);
 
       // Teste 6 (chaves=0010, registra chaves => db_chaves=0010)
       caso = 6;
@@ -132,6 +133,7 @@ module exp3_fluxo_dados_tb;
       contaC_in    = 1;
       #(clockPeriod);
       contaC_in    = 0;
+      #(clockPeriod);
 
       // Teste 9 (chaves=1000, registra chaves => db_chaves=1000)
       caso = 9;
