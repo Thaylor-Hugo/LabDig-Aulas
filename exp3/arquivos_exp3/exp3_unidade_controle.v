@@ -19,6 +19,7 @@ module exp3_unidade_controle (
     input      reset,
     input      iniciar,
     input      fimC,
+    input      chavesIgualMemoria,
     output reg zeraC,
     output reg contaC,
     output reg zeraR,
@@ -56,7 +57,7 @@ module exp3_unidade_controle (
             inicial:     Eprox = iniciar ? preparacao : inicial;
             preparacao:  Eprox = registra;
             registra:    Eprox = comparacao;
-            comparacao:  Eprox = fimC ? fim : proximo;
+            comparacao:  Eprox = (fimC || ~chavesIgualMemoria) ? fim : proximo;
             proximo:     Eprox = registra;
             fim:         Eprox = inicial;
             default:     Eprox = inicial;

@@ -11,12 +11,14 @@
 //------------------------------------------------------------------
 //
 
-module circuito_exp3 (
+module circuito_exp3_desafio (
     input clock,
     input reset,
     input iniciar,
     input [3:0] chaves,
     output pronto,
+    output acertou,
+    output errou,
     output db_igual,
     output db_iniciar,
     output [6:0] db_contagem,
@@ -32,6 +34,7 @@ exp3_unidade_controle controlUnit (
     .clock       (clock),
     .reset       (reset),
     .iniciar     (iniciar),
+    .chavesIgualMemoria (db_igual),
     .fimC        (s_fim),
     .zeraC       (s_zeraC),
     .contaC      (s_conta),
@@ -74,6 +77,9 @@ hexa7seg display_estado (
     .hexa       (s_estado),
     .display    (db_estado)
 );
+
+assign errou = (~db_igual && s_fim);
+assign acertou = (db_igual && s_fim);
 
 assign db_iniciar = iniciar;
 
