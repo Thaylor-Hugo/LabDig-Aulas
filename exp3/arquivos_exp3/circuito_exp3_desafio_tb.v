@@ -169,13 +169,13 @@ module circuito_exp3_desafio_tb;
       #(clockPeriod);
 
       // Teste 17 (ajustar chaves para 0000 por 1 periodo de clock)
-      caso = 16;
+      caso = 17;
       @(negedge clock_in);
       chaves_in = 4'b0001;
       #(clockPeriod);
 
       // Teste 18 (ajustar chaves para 0000 por 1 periodo de clock)
-      caso = 16;
+      caso = 18;
       @(negedge clock_in);
       chaves_in = 4'b0100;
       #(clockPeriod);
