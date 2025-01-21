@@ -24,7 +24,11 @@ module circuito_exp3_desafio (
     output [6:0] db_contagem,
     output [6:0] db_memoria,
     output [6:0] db_chaves,
-    output [6:0] db_estado
+    output [6:0] db_estado,
+    output [3:0] dec_contagem,
+    output [3:0] dec_memoria,
+    output [3:0] dec_chaves,
+    output [3:0] dec_estado
 );
 
 wire [3:0] s_chaves, s_memoria, s_contagem, s_estado;
@@ -81,5 +85,9 @@ hexa7seg display_estado (
 );
 
 assign db_iniciar = iniciar;
+assign dec_chaves = s_chaves;
+assign dec_contagem = s_contagem;
+assign dec_estado = s_estado;
+assign dec_memoria = s_memoria;
 
 endmodule

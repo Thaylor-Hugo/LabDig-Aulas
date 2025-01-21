@@ -144,7 +144,7 @@ module circuito_exp3_desafio_tb;
       #(3*clockPeriod);
 
       caso = 17;
-      chaves_in = 4'b0100;
+      chaves_in = 4'b1110;
       #(4*clockPeriod);
 
       // final dos casos de teste da simulacao

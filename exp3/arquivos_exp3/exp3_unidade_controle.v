@@ -86,7 +86,7 @@ module exp3_unidade_controle (
         endcase
     end
 
-    assign errou = (chavesIgualMemoria && (Eatual == fim));
-    assign acertou = (~chavesIgualMemoria && (Eatual == fim));
+    assign errou = (~chavesIgualMemoria && (Eatual == fim));
+    assign acertou = (chavesIgualMemoria && (Eatual == fim));
 
 endmodule
