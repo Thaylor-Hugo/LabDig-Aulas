@@ -52,10 +52,10 @@ module exp3_fluxo_dados_tb;
       .contaC             ( contaC_in              ),
       .zeraC              ( zeraC_in               ),
       .chaves             ( chaves_in              ),
-      .chavesIgualMemoria ( chavesIgualMemoria_out ),
+      .igual              ( chavesIgualMemoria_out ),
       .fimC               ( fimC_out               ),
       .db_contagem        ( contagem_out           ),
-      .db_chaves          ( chaves_out             ),
+      .db_jogada          ( chaves_out             ),
       .db_memoria         ( memoria_out            )
     );
 
