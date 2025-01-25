@@ -76,7 +76,7 @@ module exp3_fluxo_dados (
       .AEBi (1'b1),
       .ALBo (    ),
       .AGBo (    ),
-      .AEBo (chavesIgualMemoria)
+      .AEBo (igual)
     );
 
     // saida de depuracao

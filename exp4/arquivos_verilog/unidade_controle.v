@@ -61,7 +61,7 @@ module exp3_unidade_controle (
         case (Eatual)
             inicial:          Eprox <= iniciar ? preparacao : inicial;
             preparacao:       Eprox <= espera_jogada;
-            espera_jogada:    Eprox <= registra_jogada;
+            espera_jogada:    Eprox <= jogada ? registra_jogada : espera_jogada;
             registra_jogada:  Eprox <= compara_jogada;
             compara_jogada:   Eprox <= igual ? proximo : final_errou;
             proximo:          Eprox <= fim  ? final_acertou : espera_jogada;
