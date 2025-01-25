@@ -1,6 +1,6 @@
 //------------------------------------------------------------------
-// Arquivo   : circuito_exp3.v
-// Projeto   : Experiencia 3 - Projeto de uma Unidade de Controle 
+// Arquivo   : circuito_exp4.v
+// Projeto   : Experiencia 4 - Projeto de um Sistema Digital 
 //------------------------------------------------------------------
 // Descricao : Modulo principal da experiencia
 //             
@@ -11,43 +11,51 @@
 //------------------------------------------------------------------
 //
 
-module circuito_exp3_desafio (
+module circuito_exp4 (
     input clock,
     input reset,
     input iniciar,
     input [3:0] chaves,
-    output pronto,
     output acertou,
     output errou,
+    output pronto,
+    output [3:0] leds,
     output db_igual,
-    output db_iniciar,
     output [6:0] db_contagem,
     output [6:0] db_memoria,
-    output [6:0] db_chaves,
     output [6:0] db_estado,
-    output [3:0] dec_contagem,
-    output [3:0] dec_memoria,
-    output [3:0] dec_chaves,
-    output [3:0] dec_estado
+    output [6:0] db_jogadafeita,
+    output db_clock,
+    output db_iniciar,
+    output db_tem_jogada
 );
 
+
 wire [3:0] s_chaves, s_memoria, s_contagem, s_estado;
-wire s_fim, s_zeraC, s_zeraR, s_conta, s_registraR;
+wire s_fim, s_igual, s_zeraC, s_zeraR, s_conta, s_registraR, s_jogada;
+
+assign db_estado = s_estado;
+assign leds = s_chaves;
+assign db_tem_jogada = s_jogada;
+assign db_iniciar = iniciar;
+assign db_clock = clock;
+assign db_igual = s_igual;
 
 exp3_unidade_controle controlUnit (
-    .clock       (clock),
-    .reset       (reset),
-    .iniciar     (iniciar),
-    .chavesIgualMemoria (db_igual),
-    .errou       (errou),
-    .acertou     (acertou),
-    .fimC        (s_fim),
-    .zeraC       (s_zeraC),
-    .contaC      (s_conta),
-    .zeraR       (s_zeraR),
-    .registraR   (s_registraR),
-    .pronto      (pronto),
-    .db_estado   (s_estado)
+    .clock      (clock),
+    .reset      (reset),
+    .iniciar    (iniciar),
+    .fim        (s_fim),
+    .jogada     (s_jogada),
+    .igual      (s_igual),
+    .zeraC      (s_zeraC),
+    .contaC     (s_conta),
+    .zeraR      (s_zeraR),
+    .registraR  (s_registraR),
+    .acertou    (acertou),
+    .errou      (errou),
+    .pronto     (pronto),
+    .db_estado  (s_estado)
 );
 
 exp3_fluxo_dados fluxo_dados (
@@ -57,16 +65,17 @@ exp3_fluxo_dados fluxo_dados (
     .registraR          (s_registraR),
     .contaC             (s_conta),
     .zeraC              (s_zeraC),
-    .chavesIgualMemoria (db_igual),
+    .igual              (s_igual),
     .fimC               (s_fim),
     .db_contagem        (s_contagem),
-    .db_chaves          (s_chaves),
-    .db_memoria         (s_memoria)
+    .db_jogada          (s_chaves),
+    .db_memoria         (s_memoria),
+    .jogada_feita       (s_jogada)
 );
 
-hexa7seg display_chaves (
+hexa7seg display_jogada (
     .hexa       (s_chaves),
-    .display    (db_chaves)
+    .display    (db_jogadafeita)
 );
 
 hexa7seg display_contagem (
@@ -83,11 +92,5 @@ hexa7seg display_estado (
     .hexa       (s_estado),
     .display    (db_estado)
 );
-
-assign db_iniciar = iniciar;
-assign dec_chaves = s_chaves;
-assign dec_contagem = s_contagem;
-assign dec_estado = s_estado;
-assign dec_memoria = s_memoria;
 
 endmodule

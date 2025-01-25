@@ -13,19 +13,23 @@
 
 module exp3_fluxo_dados (
     input clock,
-    input [3:0] chaves,
+    input zeraC,
+    input contaC,
     input zeraR,
     input registraR,
-    input contaC,
-    input zeraC,
-    output chavesIgualMemoria,
+    input [3:0] chaves,
+    output igual,
     output fimC,
+    output jogada_feita,
+    output db_tem_jogada,
     output [3:0] db_contagem,
-    output [3:0] db_chaves,
-    output [3:0] db_memoria
+    output [3:0] db_memoria,
+    output [3:0] db_jogada
 );
 
     wire   [3:0] s_endereco, s_dado, s_chaves;  // sinal interno para interligacao dos componentes
+    wire s_jogada;
+    wire sinal = chaves[0] | chaves[1] | chaves[2] | chaves[3];
 
     // contador_163
     contador_163 contador (
@@ -37,6 +41,14 @@ module exp3_fluxo_dados (
       .D        (4'b0),
       .Q        (s_endereco),
       .rco      (fimC)
+    );
+
+     // edge_detector
+    edge_detector detector (
+        .clock      (clock), 
+        .reset      (zeraC),
+        .sinal      (sinal),
+        .pulso      (s_jogada)
     );
 
     // memoria_rom_16x4
@@ -70,6 +82,8 @@ module exp3_fluxo_dados (
     // saida de depuracao
     assign db_contagem = s_endereco;
     assign db_memoria = s_dado;
-    assign db_chaves = s_chaves;
+    assign db_jogada = s_chaves;
+    assign jogada_feita = s_jogada;
+    assign db_tem_jogada = sinal;
 
  endmodule
