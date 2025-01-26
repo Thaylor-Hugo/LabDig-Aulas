@@ -34,7 +34,6 @@ module circuito_exp4 (
 wire [3:0] s_chaves, s_memoria, s_contagem, s_estado;
 wire s_fim, s_igual, s_zeraC, s_zeraR, s_conta, s_registraR, s_jogada;
 
-assign db_estado = s_estado;
 assign leds = s_chaves;
 assign db_tem_jogada = s_jogada;
 assign db_iniciar = iniciar;
