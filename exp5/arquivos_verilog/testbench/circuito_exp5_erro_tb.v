@@ -20,7 +20,7 @@
 
 `timescale 1ns/1ns
 
-module circuito_exp4_erro_tb;
+module circuito_exp5_erro_tb;
 
     // Sinais para conectar com o DUT
     // valores iniciais para fins de simulacao (ModelSim)
