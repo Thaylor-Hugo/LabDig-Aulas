@@ -18,13 +18,16 @@ module exp3_fluxo_dados (
     input zeraR,
     input registraR,
     input [3:0] chaves,
+	 input contaT,
     output igual,
     output fimC,
     output jogada_feita,
     output db_tem_jogada,
     output [3:0] db_contagem,
     output [3:0] db_memoria,
-    output [3:0] db_jogada
+    output [3:0] db_jogada,
+	 output timeout
+
 );
 
     wire   [3:0] s_endereco, s_dado, s_chaves;  // sinal interno para interligacao dos componentes
@@ -42,6 +45,21 @@ module exp3_fluxo_dados (
       .Q        (s_endereco),
       .rco      (fimC)
     );
+	 
+	 // contador_m
+ contador_m  #(.M(4000), .N(16)) contador_timeout
+  (
+   .clock     (clock),   
+	.zera_as   (~contaT),
+	.zera_s    (1'b0),
+	.conta	  (contaT),
+	.Q         (),
+   .fim       (timeout),
+   .meio      ()
+  );
+	 
+	 
+	 
 
      // edge_detector
     edge_detector detector (

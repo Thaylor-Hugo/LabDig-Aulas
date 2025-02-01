@@ -27,18 +27,21 @@ module circuito_exp4 (
     output [6:0] db_jogadafeita,
     output db_clock,
     output db_iniciar,
-    output db_tem_jogada
+    output db_tem_jogada,
+	 output db_timeout
+
 );
 
 
 wire [3:0] s_chaves, s_memoria, s_contagem, s_estado;
-wire s_fim, s_igual, s_zeraC, s_zeraR, s_conta, s_registraR, s_jogada;
+wire s_fim, s_igual, s_zeraC, s_zeraR, s_conta, s_registraR, s_jogada, s_timeout, s_contaT;
 
 assign leds = s_chaves;
 assign db_tem_jogada = s_jogada;
 assign db_iniciar = iniciar;
 assign db_clock = clock;
 assign db_igual = s_igual;
+assign db_timeout = s_timeout;
 
 exp3_unidade_controle controlUnit (
     .clock      (clock),
@@ -54,7 +57,9 @@ exp3_unidade_controle controlUnit (
     .acertou    (acertou),
     .errou      (errou),
     .pronto     (pronto),
-    .db_estado  (s_estado)
+    .db_estado  (s_estado),
+	 .contaT     (s_contaT),
+	 .timeout    (s_timeout)
 );
 
 exp3_fluxo_dados fluxo_dados (
@@ -69,7 +74,10 @@ exp3_fluxo_dados fluxo_dados (
     .db_contagem        (s_contagem),
     .db_jogada          (s_chaves),
     .db_memoria         (s_memoria),
-    .jogada_feita       (s_jogada)
+    .jogada_feita       (s_jogada),
+	 .contaT     			(s_contaT),
+	 .timeout    			(s_timeout)
+	 
 );
 
 hexa7seg display_jogada (
