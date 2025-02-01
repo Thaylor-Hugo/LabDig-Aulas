@@ -1,6 +1,6 @@
 //------------------------------------------------------------------
-// Arquivo   : circuito_exp4.v
-// Projeto   : Experiencia 4 - Projeto de um Sistema Digital 
+// Arquivo   : circuito_exp5.v
+// Projeto   : Experiencia 5 - Projeto de um Sistema Digital 
 //------------------------------------------------------------------
 // Descricao : Modulo principal da experiencia
 //             
@@ -11,11 +11,11 @@
 //------------------------------------------------------------------
 //
 
-module circuito_exp4 (
+module circuito_exp5 (
     input clock,
     input reset,
     input iniciar,
-    input [3:0] chaves,
+    input [3:0] botoes,
     output acertou,
     output errou,
     output pronto,
@@ -25,63 +25,75 @@ module circuito_exp4 (
     output [6:0] db_memoria,
     output [6:0] db_estado,
     output [6:0] db_jogadafeita,
+    output [6:0] db_limite,
     output db_clock,
     output db_iniciar,
     output db_tem_jogada,
-	 output db_timeout
-
+	output db_timeout
 );
 
 
-wire [3:0] s_chaves, s_memoria, s_contagem, s_estado;
-wire s_fim, s_igual, s_zeraC, s_zeraR, s_conta, s_registraR, s_jogada, s_timeout, s_contaT;
+wire [3:0] s_botoes, s_memoria, s_contagem, s_estado, s_limite;
+wire s_fimE, s_fimL, s_igual, s_zeraE, s_zeraL, s_contaE, s_contaL, s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;;
 
-assign leds = s_chaves;
+assign leds = s_botoes;
 assign db_tem_jogada = s_jogada;
 assign db_iniciar = iniciar;
 assign db_clock = clock;
 assign db_igual = s_igual;
 assign db_timeout = s_timeout;
 
-exp3_unidade_controle controlUnit (
-    .clock      (clock),
-    .reset      (reset),
-    .iniciar    (iniciar),
-    .fim        (s_fim),
-    .jogada     (s_jogada),
-    .igual      (s_igual),
-    .zeraC      (s_zeraC),
-    .contaC     (s_conta),
-    .zeraR      (s_zeraR),
-    .registraR  (s_registraR),
-    .acertou    (acertou),
-    .errou      (errou),
-    .pronto     (pronto),
-    .db_estado  (s_estado),
-	 .contaT     (s_contaT),
-	 .timeout    (s_timeout)
+unidade_controle controlUnit (
+    .clock                  (clock),
+    .reset                  (reset),
+    .iniciar                (iniciar),
+    .jogada                 (s_jogada),
+	.timeout                (s_timeout),
+    .botoesIgualMemoria     (s_botoes_igual_memoria),
+    .fimE                   (s_fimE),
+    .fimL                   (s_fimL),
+    .enderecoIgualLimite    (s_endereco_igual_limite),
+    .enderecoMenorLimite    (s_endereco_menor_limite),
+    .zeraE                  (s_zeraE),
+    .contaE                 (s_contaL),
+    .zeraL                  (s_zeraL),
+    .contaL                 (s_contaL),
+    .zeraR                  (s_zeraR),
+    .registraR              (s_registraR),
+    .acertou                (acertou),
+    .errou                  (errou),
+    .pronto                 (pronto),
+    .db_estado              (s_estado),
+	.contaT                 (s_conta)
 );
 
-exp3_fluxo_dados fluxo_dados (
-    .clock              (clock),
-    .chaves             (chaves),
-    .zeraR              (s_zeraR),
-    .registraR          (s_registraR),
-    .contaC             (s_conta),
-    .zeraC              (s_zeraC),
-    .igual              (s_igual),
-    .fimC               (s_fim),
-    .db_contagem        (s_contagem),
-    .db_jogada          (s_chaves),
-    .db_memoria         (s_memoria),
-    .jogada_feita       (s_jogada),
-	 .contaT     			(s_contaT),
-	 .timeout    			(s_timeout)
+fluxo_dados fluxo_dados (
+    .clock                  (clock),
+    .zeraE                  (s_zeraE),
+    .contaE                 (s_contaE),
+    .zeraL                  (s_zeraL),
+    .contaL                 (s_contaL),
+    .zeraR                  (s_zeraE),
+    .registraR              (s_registraR),
+    .botoes                 (s_botoes),
+	.contaT                 (s_contaT),
+    .botoesIgualMemoria     (s_botoes_igual_memoria),
+    .fimE                   (s_fimE),
+    .fimL                   (s_fimL),
+    .endecoIgualLimite      (s_endereco_igual_limite),
+    .endecoMenorLimite      (s_endereco_menor_limite),
+    .jogada_feita           (s_jogada),
+    .db_tem_jogada          (db_tem_jogada),
+    .db_limite              (s_limite),
+    .db_contagem            (s_contagem),
+    .db_memoria             (s_memoria),
+    .db_jogada              (s_botoes),
+	.timeout                (s_timeout)
 	 
 );
 
 hexa7seg display_jogada (
-    .hexa       (s_chaves),
+    .hexa       (s_botoes),
     .display    (db_jogadafeita)
 );
 
@@ -98,6 +110,11 @@ hexa7seg display_memoria (
 hexa7seg display_estado (
     .hexa       (s_estado),
     .display    (db_estado)
+);
+
+hexa7seg display_limite (
+    .hexa       (s_limite),
+    .display    (db_limite)
 );
 
 endmodule

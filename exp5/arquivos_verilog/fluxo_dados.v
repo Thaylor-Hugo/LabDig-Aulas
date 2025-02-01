@@ -11,18 +11,24 @@
 //------------------------------------------------------------------
 //
 
-module exp3_fluxo_dados (
+module fluxo_dados (
     input clock,
-    input zeraC,
-    input contaC,
+    input zeraE,
+    input contaE,
+    input zeraL,
+    input contaL,
     input zeraR,
     input registraR,
-    input [3:0] chaves,
+    input [3:0] botoes,
 	input contaT,
-    output igual,
-    output fimC,
+    output botoesIgualMemoria,
+    output fimE,
+    output fimL,
+    output endecoIgualLimite,
+    output endecoMenorLimite,
     output jogada_feita,
     output db_tem_jogada,
+    output [3:0] db_limite,
     output [3:0] db_contagem,
     output [3:0] db_memoria,
     output [3:0] db_jogada,
@@ -30,20 +36,32 @@ module exp3_fluxo_dados (
 
 );
 
-    wire   [3:0] s_endereco, s_dado, s_chaves;  // sinal interno para interligacao dos componentes
+    wire [3:0] s_endereco, s_dado, s_botoes, s_limite;  // sinal interno para interligacao dos componentes
     wire s_jogada;
-    wire sinal = chaves[0] | chaves[1] | chaves[2] | chaves[3];
+    wire sinal = botoes[0] | botoes[1] | botoes[2] | botoes[3];
 
     // contador_163
     contador_163 contador (
         .clock    (clock),
-        .clr      (~zeraC),
+        .clr      (~zeraE),
         .ld       (1'b1),
         .ent      (1'b1),
-        .enp      (contaC),
+        .enp      (contaE),
         .D        (4'b0),
         .Q        (s_endereco),
-        .rco      (fimC)
+        .rco      (fimE)
+    );
+
+    // contador_163
+    contador_163 contadorLmt (
+        .clock    (clock),
+        .clr      (~zeraL),
+        .ld       (1'b1),
+        .ent      (1'b1),
+        .enp      (contaL),
+        .D        (4'b0),
+        .Q        (s_limite),
+        .rco      (fimL)
     );
 	 
 	 // contador_m
@@ -56,9 +74,6 @@ module exp3_fluxo_dados (
        .fim       (timeout),
        .meio      ()
     );
-	 
-	 
-	 
 
      // edge_detector
     edge_detector detector (
@@ -80,27 +95,40 @@ module exp3_fluxo_dados (
         .clock  (clock),
         .clear  (zeraR),
         .enable (registraR),
-        .D      (chaves),
-        .Q      (s_chaves)
+        .D      (botoes),
+        .Q      (s_botoes)
     );
 
     // comparador_85
     comparador_85 comparador (
         .A    (s_dado),
-        .B    (s_chaves),
+        .B    (s_botoes),
         .ALBi (1'b0),
         .AGBi (1'b0),
         .AEBi (1'b1),
         .ALBo (    ),
         .AGBo (    ),
-        .AEBo (igual)
+        .AEBo (botoesIgualMemoria)
+    );
+    
+    // comparador_85
+    comparador_85 comparadorLmt (
+        .A    (s_endereco),
+        .B    (s_limite),
+        .ALBi (1'b0),
+        .AGBi (1'b0),
+        .AEBi (1'b1),
+        .ALBo (endecoMenorLimite),
+        .AGBo (    ),
+        .AEBo (endecoIgualLimite)
     );
 
     // saida de depuracao
     assign db_contagem = s_endereco;
     assign db_memoria = s_dado;
-    assign db_jogada = s_chaves;
+    assign db_jogada = s_botoes;
     assign jogada_feita = s_jogada;
     assign db_tem_jogada = sinal;
+    assign db_limite = s_limite;
 
  endmodule
