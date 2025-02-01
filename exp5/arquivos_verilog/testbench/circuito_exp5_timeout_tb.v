@@ -55,7 +55,7 @@ module circuito_exp5_timeout_tb;
     always #((clockPeriod / 2)) clock_in = ~clock_in;
 
     // instanciacao do DUT (Device Under Test)
-    circuito_exp4 dut (
+    circuito_exp5 dut (
         .clock          ( clock_in    ),
         .reset          ( reset_in    ),
         .iniciar        ( iniciar_in  ),
@@ -147,7 +147,12 @@ module circuito_exp5_timeout_tb;
         chaves_in = 4'b0000;
         #(10*clockPeriod);
         chaves_in = 4'b0010;
-        #(500*10*clockPeriod);
+        #(10*clockPeriod);
+        chaves_in = 4'b0000;
+        #(10*clockPeriod);
+        #(10000*clockPeriod);
+        #(10000*clockPeriod);
+        #(10000*clockPeriod);
         chaves_in = 4'b0100;
         #(10*clockPeriod);
 
