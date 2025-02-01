@@ -34,10 +34,9 @@ module circuito_exp5 (
 
 
 wire [3:0] s_botoes, s_memoria, s_contagem, s_estado, s_limite;
-wire s_fimE, s_fimL, s_igual, s_zeraE, s_zeraL, s_contaE, s_contaL, s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;;
+wire s_fimE, s_fimL, s_igual, s_zeraE, s_zeraL, s_contaE, s_contaL, s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;
 
 assign leds = s_botoes;
-assign db_tem_jogada = s_jogada;
 assign db_iniciar = iniciar;
 assign db_clock = clock;
 assign db_igual = s_igual;
@@ -55,7 +54,7 @@ unidade_controle controlUnit (
     .enderecoIgualLimite    (s_endereco_igual_limite),
     .enderecoMenorLimite    (s_endereco_menor_limite),
     .zeraE                  (s_zeraE),
-    .contaE                 (s_contaL),
+    .contaE                 (s_contaE),
     .zeraL                  (s_zeraL),
     .contaL                 (s_contaL),
     .zeraR                  (s_zeraR),
