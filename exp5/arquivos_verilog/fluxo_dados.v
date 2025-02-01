@@ -78,7 +78,7 @@ module fluxo_dados (
      // edge_detector
     edge_detector detector (
         .clock      (clock), 
-        .reset      (zeraC),
+        .reset      (s_zeraL),
         .sinal      (sinal),
         .pulso      (s_jogada)
     );

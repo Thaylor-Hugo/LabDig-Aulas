@@ -63,7 +63,7 @@ unidade_controle controlUnit (
     .errou                  (errou),
     .pronto                 (pronto),
     .db_estado              (s_estado),
-	.contaT                 (s_conta)
+	.contaT                 (s_contaT)
 );
 
 fluxo_dados fluxo_dados (
@@ -74,7 +74,7 @@ fluxo_dados fluxo_dados (
     .contaL                 (s_contaL),
     .zeraR                  (s_zeraE),
     .registraR              (s_registraR),
-    .botoes                 (s_botoes),
+    .botoes                 (botoes),
 	.contaT                 (s_contaT),
     .botoesIgualMemoria     (s_botoes_igual_memoria),
     .fimE                   (s_fimE),

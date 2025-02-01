@@ -107,7 +107,7 @@ module unidade_controle (
     always @* begin
         zeraL     <= (Eatual == inicial || Eatual == preparacao) ? 1'b1 : 1'b0;
         zeraR     <= (Eatual == inicial || Eatual == preparacao) ? 1'b1 : 1'b0;
-        zeraE     <= (Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
+        zeraE     <= (Eatual == inicial || Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
         registraR <= (Eatual == registra_jogada) ? 1'b1 : 1'b0;
         contaL    <= (Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
         contaE    <= (Eatual == proxima_jogada) ? 1'b1 : 1'b0;
