@@ -18,7 +18,7 @@ module exp3_fluxo_dados (
     input zeraR,
     input registraR,
     input [3:0] chaves,
-	 input contaT,
+	input contaT,
     output igual,
     output fimC,
     output jogada_feita,
@@ -26,7 +26,7 @@ module exp3_fluxo_dados (
     output [3:0] db_contagem,
     output [3:0] db_memoria,
     output [3:0] db_jogada,
-	 output timeout
+	output timeout
 
 );
 
@@ -36,27 +36,26 @@ module exp3_fluxo_dados (
 
     // contador_163
     contador_163 contador (
-      .clock    (clock),
-      .clr      (~zeraC),
-      .ld       (1'b1),
-      .ent      (1'b1),
-      .enp      (contaC),
-      .D        (4'b0),
-      .Q        (s_endereco),
-      .rco      (fimC)
+        .clock    (clock),
+        .clr      (~zeraC),
+        .ld       (1'b1),
+        .ent      (1'b1),
+        .enp      (contaC),
+        .D        (4'b0),
+        .Q        (s_endereco),
+        .rco      (fimC)
     );
 	 
 	 // contador_m
- contador_m  #(.M(4000), .N(16)) contador_timeout
-  (
-   .clock     (clock),   
-	.zera_as   (~contaT),
-	.zera_s    (1'b0),
-	.conta	  (contaT),
-	.Q         (),
-   .fim       (timeout),
-   .meio      ()
-  );
+    contador_m  #(.M(4000), .N(16)) contador_timeout (
+       .clock     (clock),   
+       .zera_as   (~contaT),
+       .zera_s    (1'b0),
+       .conta	  (contaT),
+       .Q         (),
+       .fim       (timeout),
+       .meio      ()
+    );
 	 
 	 
 	 
@@ -87,14 +86,14 @@ module exp3_fluxo_dados (
 
     // comparador_85
     comparador_85 comparador (
-      .A    (s_dado),
-      .B    (s_chaves),
-      .ALBi (1'b0),
-      .AGBi (1'b0),
-      .AEBi (1'b1),
-      .ALBo (    ),
-      .AGBo (    ),
-      .AEBo (igual)
+        .A    (s_dado),
+        .B    (s_chaves),
+        .ALBi (1'b0),
+        .AGBi (1'b0),
+        .AEBi (1'b1),
+        .ALBo (    ),
+        .AGBo (    ),
+        .AEBo (igual)
     );
 
     // saida de depuracao
