@@ -72,7 +72,7 @@ fluxo_dados fluxo_dados (
     .contaE                 (s_contaE),
     .zeraL                  (s_zeraL),
     .contaL                 (s_contaL),
-    .zeraR                  (s_zeraE),
+    .zeraR                  (s_zeraR),
     .registraR              (s_registraR),
     .botoes                 (botoes),
 	.contaT                 (s_contaT),
