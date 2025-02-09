@@ -16,6 +16,7 @@ module circuito_exp5 (
     input reset,
     input iniciar,
     input [3:0] botoes,
+	 input botaoDificuldade,
     output acertou,
     output errou,
     output pronto,
@@ -29,18 +30,20 @@ module circuito_exp5 (
     output db_clock,
     output db_iniciar,
     output db_tem_jogada,
-	output db_timeout
+	 output db_timeout,
+	 output db_dificuldade
 );
 
 
 wire [3:0] s_botoes, s_memoria, s_contagem, s_estado, s_limite;
-wire s_fimE, s_fimL, s_botoes_igual_memoria, s_zeraE, s_zeraL, s_contaE, s_contaL, s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;
+wire s_fimE, s_fimL, s_botoes_igual_memoria,s_meioL, s_dificuldade, s_zeraE, s_zeraL, s_contaE, s_contaL, s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;
 
 assign leds = s_botoes;
 assign db_iniciar = iniciar;
 assign db_clock = clock;
 assign db_igual = s_botoes_igual_memoria;
 assign db_timeout = s_timeout;
+assign db_dificuldade = s_dificuldade;
 
 unidade_controle controlUnit (
     .clock                  (clock),
@@ -51,6 +54,7 @@ unidade_controle controlUnit (
     .botoesIgualMemoria     (s_botoes_igual_memoria),
     .fimE                   (s_fimE),
     .fimL                   (s_fimL),
+	 .meioL						 (s_meioL),
     .enderecoIgualLimite    (s_endereco_igual_limite),
     .enderecoMenorLimite    (s_endereco_menor_limite),
     .zeraE                  (s_zeraE),
@@ -63,7 +67,9 @@ unidade_controle controlUnit (
     .errou                  (errou),
     .pronto                 (pronto),
     .db_estado              (s_estado),
-	.contaT                 (s_contaT)
+	.contaT                 (s_contaT),
+	.db_dificuldade 			(s_dificuldade),
+	.chaveDificuldade			(botaoDificuldade)
 );
 
 fluxo_dados fluxo_dados (
@@ -75,10 +81,11 @@ fluxo_dados fluxo_dados (
     .zeraR                  (s_zeraR),
     .registraR              (s_registraR),
     .botoes                 (botoes),
-	.contaT                 (s_contaT),
+	 .contaT                 (s_contaT),
     .botoesIgualMemoria     (s_botoes_igual_memoria),
     .fimE                   (s_fimE),
     .fimL                   (s_fimL),
+	 .meioL 						 (s_meioL),
     .endecoIgualLimite      (s_endereco_igual_limite),
     .endecoMenorLimite      (s_endereco_menor_limite),
     .jogada_feita           (s_jogada),
@@ -87,8 +94,7 @@ fluxo_dados fluxo_dados (
     .db_contagem            (s_contagem),
     .db_memoria             (s_memoria),
     .db_jogada              (s_botoes),
-	.timeout                (s_timeout)
-	 
+	.timeout                (s_timeout)	
 );
 
 hexa7seg display_jogada (

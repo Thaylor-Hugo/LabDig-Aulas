@@ -20,10 +20,11 @@ module fluxo_dados (
     input zeraR,
     input registraR,
     input [3:0] botoes,
-	input contaT,
+	 input contaT,
     output botoesIgualMemoria,
     output fimE,
     output fimL,
+	 output meioL,
     output endecoIgualLimite,
     output endecoMenorLimite,
     output jogada_feita,
@@ -32,7 +33,7 @@ module fluxo_dados (
     output [3:0] db_contagem,
     output [3:0] db_memoria,
     output [3:0] db_jogada,
-	output timeout
+	 output timeout
 
 );
 
@@ -52,16 +53,17 @@ module fluxo_dados (
         .rco      (fimE)
     );
 
-    // contador_163
-    contador_163 contadorLmt (
-        .clock    (clock),
-        .clr      (~zeraL),
-        .ld       (1'b1),
-        .ent      (1'b1),
-        .enp      (contaL),
-        .D        (4'b0),
-        .Q        (s_limite),
-        .rco      (fimL)
+   
+	 
+	 // contador_m
+    contador_m  #(.M(16),.N(16)) contadorLmt (
+       .clock     (clock),   
+       .zera_as   (zeraL),
+       .zera_s    (1'b0),
+       .conta	  (contaL),
+       .Q         (s_limite),
+       .fim       (fimL),
+       .meio      (meioL)
     );
 	 
 	 // contador_m
@@ -69,7 +71,7 @@ module fluxo_dados (
        .clock     (clock),   
        .zera_as   (~contaT),
        .zera_s    (1'b0),
-       .conta	  (contaT),
+       .conta	   (contaT),
        .Q         (),
        .fim       (timeout),
        .meio      ()
