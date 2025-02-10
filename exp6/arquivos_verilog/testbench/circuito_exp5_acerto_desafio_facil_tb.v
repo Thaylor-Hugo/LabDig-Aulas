@@ -45,6 +45,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
     wire       db_tem_jogada_out ;
     wire       db_timeout_out    ;
     wire       db_dificuldade_out;
+    wire [1:0] db_selmux_out;
 
     // Configuração do clock
     parameter clockPeriod = 1_000_000; // in ns, f=1KHz
@@ -59,7 +60,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
     circuito_exp5 dut (
         .clock          ( clock_in    ),
         .reset          ( reset_in    ),
-        .iniciar        ( iniciar_in  ),
+        .jogar        ( iniciar_in  ),
         .botoes         ( chaves_in   ),
         .botaoDificuldade (botaoDificuldade_out),
         .acertou        ( acertou_out ),
@@ -76,7 +77,8 @@ module circuito_exp5_acerto_desafio_facil_tb;
         .db_iniciar     ( db_iniciar_out     ),    
         .db_tem_jogada  ( db_tem_jogada_out  ),
         .db_timeout     ( db_timeout_out     ),
-        .db_dificuldade ( db_dificuldade_out )
+        .db_dificuldade ( db_dificuldade_out ),
+        .db_selMux      ( db_selmux_out)
     );
 
     // geracao dos sinais de entrada (estimulos)
@@ -122,6 +124,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 4. Rodada #0 - Chaves 0001
         caso = 4;
         @(negedge clock_in);
+        #(2000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -131,6 +134,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 5. Rodada #1 Todas as anteriores + chaves 0010
         caso = 5;
         @(negedge clock_in);
+        #(3000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -145,6 +149,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 6. Rodada #2 Todas as anteriores + chaves 0100
         caso = 6;
         @(negedge clock_in);
+        #(4000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -163,6 +168,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 7. Rodada #3 Todas as anteriores + chaves 1000
         caso = 7;
         @(negedge clock_in);
+        #(5000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -185,6 +191,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 8. Rodada #4 Todas as anteriores + chaves 0100
         caso = 8;
         @(negedge clock_in);
+        #(6000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -211,6 +218,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 9. Rodada #5 Todas as anteriores + chaves 0010
         caso = 9;
         @(negedge clock_in);
+        #(7000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -241,6 +249,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 10. Rodada #6 Todas as anteriores + chaves 0001
         caso = 10;
         @(negedge clock_in);
+        #(8000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
@@ -275,6 +284,7 @@ module circuito_exp5_acerto_desafio_facil_tb;
         // Teste 11. Rodada #7 Todas as anteriores + chaves 0001
         caso = 11;
         @(negedge clock_in);
+        #(9000*clockPeriod);
         chaves_in = 4'b0001;
         #(10*clockPeriod);
         chaves_in = 4'b0000;
