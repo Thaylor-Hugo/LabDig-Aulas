@@ -11,50 +11,54 @@
 //------------------------------------------------------------------
 //
 
-module circuito_exp5 (
+module jogo_desafio_memoria (
     input clock,
     input reset,
-    input iniciar,
+    input jogar,
+	input botaoDificuldade,
     input [3:0] botoes,
-	 input botaoDificuldade,
-    output acertou,
-    output errou,
-    output pronto,
     output [3:0] leds,
-    output db_igual,
+    output ganhou,
+    output perdeu,
+    output pronto,
     output [6:0] db_contagem,
     output [6:0] db_memoria,
     output [6:0] db_estado,
     output [6:0] db_jogadafeita,
     output [6:0] db_limite,
     output db_clock,
+    output db_igual,
     output db_iniciar,
     output db_tem_jogada,
-	 output db_timeout,
-	 output db_dificuldade
+	output db_timeout,
+	output db_dificuldade,
+    output db_selMux
 );
 
 
 wire [3:0] s_botoes, s_memoria, s_contagem, s_estado, s_limite;
-wire s_fimE, s_fimL, s_botoes_igual_memoria,s_meioL, s_dificuldade, s_zeraE, s_zeraL, s_contaE, s_contaL, s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;
+wire [1:0] s_selMux;
+wire s_fimE, s_fimL, s_botoes_igual_memoria,s_meioL, s_dificuldade, s_zeraE, s_zeraL, s_contaE, s_contaL;
+wire s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;
+wire s_zeraM, s_contaM, s_meioM, s_fimM;
 
-assign leds = s_botoes;
 assign db_iniciar = iniciar;
 assign db_clock = clock;
 assign db_igual = s_botoes_igual_memoria;
 assign db_timeout = s_timeout;
 assign db_dificuldade = s_dificuldade;
+assign db_selMux = s_selMux;
 
 unidade_controle controlUnit (
     .clock                  (clock),
     .reset                  (reset),
-    .iniciar                (iniciar),
+    .iniciar                (jogar),
     .jogada                 (s_jogada),
 	.timeout                (s_timeout),
     .botoesIgualMemoria     (s_botoes_igual_memoria),
     .fimE                   (s_fimE),
     .fimL                   (s_fimL),
-	 .meioL						 (s_meioL),
+	.meioL					(s_meioL),
     .enderecoIgualLimite    (s_endereco_igual_limite),
     .enderecoMenorLimite    (s_endereco_menor_limite),
     .zeraE                  (s_zeraE),
@@ -63,13 +67,18 @@ unidade_controle controlUnit (
     .contaL                 (s_contaL),
     .zeraR                  (s_zeraR),
     .registraR              (s_registraR),
-    .acertou                (acertou),
-    .errou                  (errou),
+    .acertou                (ganhou),
+    .errou                  (perdeu),
     .pronto                 (pronto),
     .db_estado              (s_estado),
 	.contaT                 (s_contaT),
 	.db_dificuldade 			(s_dificuldade),
-	.chaveDificuldade			(botaoDificuldade)
+	.chaveDificuldade			(botaoDificuldade),
+    .seletor                (s_selMux),
+    .zeraM                  (s_zeraM),
+    .contaM                 (s_contaM),
+    .meioM                  (s_meioM),
+    .fimM                   (s_fimM)
 );
 
 fluxo_dados fluxo_dados (
@@ -94,7 +103,13 @@ fluxo_dados fluxo_dados (
     .db_contagem            (s_contagem),
     .db_memoria             (s_memoria),
     .db_jogada              (s_botoes),
-	.timeout                (s_timeout)	
+	.timeout                (s_timeout),
+    .leds                   (leds),	
+    .seletor                (s_selMux),
+    .zeraM                  (s_zeraM),
+    .contaM                 (s_contaM),
+    .meioM                  (s_meioM),
+    .fimM                   (s_fimM)
 );
 
 hexa7seg display_jogada (

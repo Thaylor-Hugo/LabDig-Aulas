@@ -18,13 +18,18 @@ module fluxo_dados (
     input zeraL,
     input contaL,
     input zeraR,
+    input zeraM,
+    input contaM,
     input registraR,
     input [3:0] botoes,
-	 input contaT,
+	input contaT,
+    input [1:0] seletor,
     output botoesIgualMemoria,
     output fimE,
     output fimL,
-	 output meioL,
+	output meioL,
+    output fimM,
+    output meioM,
     output endecoIgualLimite,
     output endecoMenorLimite,
     output jogada_feita,
@@ -33,13 +38,26 @@ module fluxo_dados (
     output [3:0] db_contagem,
     output [3:0] db_memoria,
     output [3:0] db_jogada,
-	 output timeout
+    output [3:0] leds,
+	output timeout
 
 );
-
-    wire [3:0] s_endereco, s_dado, s_botoes, s_limite;  // sinal interno para interligacao dos componentes
+    wire [3:0] s_endereco, s_dado, s_botoes, s_limite, s_leds;  // sinal interno para interligacao dos componentes
     wire s_jogada;
     wire sinal = botoes[0] | botoes[1] | botoes[2] | botoes[3];
+
+
+    // multiplexador 3x1
+    mux3x1 mux (
+
+        .D0      (4'b0),
+        .D1      (s_dado),
+        .D2      (s_botoes),
+        .SEL     (seletor),
+        .OUT     (s_leds)
+
+    );
+
 
     // contador_163
     contador_163 contador (
@@ -63,6 +81,17 @@ module fluxo_dados (
        .conta	  (contaL),
        .Q         (s_limite),
        .fim       (fimL),
+       .meio      (meioL)
+    );
+
+    // contador_m
+    contador_m  #(.M(1000),.N(16)) contadorM (
+       .clock     (clock),   
+       .zera_as   (zeraM),
+       .zera_s    (1'b0),
+       .conta	  (contaM),
+       .Q         (),
+       .fim       (fimM),
        .meio      (meioL)
     );
 	 

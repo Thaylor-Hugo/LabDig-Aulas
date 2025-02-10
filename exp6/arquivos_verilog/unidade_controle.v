@@ -19,14 +19,19 @@ module unidade_controle (
     input reset,
     input iniciar,
     input jogada,
-	 input timeout,
+	input timeout,
     input botoesIgualMemoria,
     input fimE,
     input fimL,
-	 input meioL,
+	input meioL,
     input enderecoIgualLimite,
     input enderecoMenorLimite,
-	 input chaveDificuldade,
+	input chaveDificuldade,
+    input fimM,
+    input meioM,
+    output reg [1:0] seletor,
+    output reg zeraM,
+    output reg contaM,
     output reg zeraE,
     output reg contaE,
     output reg zeraL,
@@ -44,14 +49,16 @@ module unidade_controle (
     // Define estados
     parameter inicial               = 4'b0000;  // 0
     parameter preparacao            = 4'b0001;  // 1
-    parameter inicia_sequencia      = 4'b0010;  // 2
+    parameter proxima_mostra        = 4'b0010;  // 2
     parameter espera_jogada         = 4'b0011;  // 3
     parameter registra_jogada       = 4'b0100;  // 4
     parameter compara_jogada        = 4'b0101;  // 5
     parameter proxima_jogada        = 4'b0110;  // 6
     parameter foi_ultima_sequencia  = 4'b0111;  // 7
     parameter proxima_sequencia     = 4'b1000;  // 8
-    parameter final_timeout 	    	= 4'b1101;  // D
+    parameter mostra_jogada         = 4'b1001;  // 9
+    parameter intervalo_mostra      = 4'b1010;  // A
+    parameter final_timeout 	    = 4'b1101;  // D
     parameter final_acertou         = 4'b1110;  // E
     parameter final_errou           = 4'b1111;  // F
 	 
@@ -77,8 +84,11 @@ module unidade_controle (
     always @* begin
         case (Eatual)
             inicial:          Eprox <= iniciar ? preparacao : inicial;
-            preparacao:       Eprox <= inicia_sequencia;
-            inicia_sequencia: Eprox <= espera_jogada;
+            preparacao:       Eprox <= mostra_jogada;
+            mostra_jogada:    Eprox <= meioM ? intervalo_mostra : intervalo_mostra;
+            intervalo_mostra: Eprox <= fimM ? espera_jogada : proxima_mostra;
+            proxima_mostra:   Eprox <= enderecoIgualLimite ? espera_jogada : mostra_jogada;
+            
             espera_jogada:    begin 
                 if (jogada) begin
 					Eprox <= registra_jogada;
@@ -100,8 +110,8 @@ module unidade_controle (
             end													
             proxima_jogada:         Eprox <= espera_jogada;
             foi_ultima_sequencia:   Eprox <= (fimL || (meioL && ~Dificuldade)) ? final_acertou : proxima_sequencia;
-            proxima_sequencia:      Eprox <= inicia_sequencia;
-			   final_timeout:          Eprox <= iniciar ? preparacao : final_timeout;
+            proxima_sequencia:      Eprox <= mostra_jogada;
+            final_timeout:          Eprox <= iniciar ? preparacao : final_timeout;w
             final_errou:            Eprox <= iniciar ? preparacao : final_errou;
             final_acertou:          Eprox <= iniciar ? preparacao : final_acertou;
             default:                Eprox <= inicial;
@@ -119,23 +129,35 @@ module unidade_controle (
         pronto    	<= (Eatual == final_acertou || Eatual == final_errou || Eatual == final_timeout) ? 1'b1 : 1'b0;
         acertou   	<= (Eatual == final_acertou) ? 1'b1 : 1'b0;
         errou     	<= (Eatual == final_errou) ? 1'b1 : 1'b0;
-		  contaT	   	<= (Eatual == espera_jogada) ? 1'b1 : 1'b0;
-		  if (Eatual == preparacao) begin 
-				Dificuldade <= chaveDificuldade;
-			end
+		contaT	   	<= (Eatual == espera_jogada) ? 1'b1 : 1'b0;
+		zeraM       <= (Etaual == preparacao || Eatual == proxima_mostra || Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
+        contaM      <= (Eatual == mostra_jogada || Eatual == intervalo_mostra) ? 1'b1 : 1'b0;
+        if (Eatual == intervalo_mostra) begin
+            seletor <= 1'b00;
+        end else if (Eatual == mostra_jogada) begin
+            seletor <= 1'b01;
+        end else begin
+            seletor <= 1'b10;
+        end
+
+        if (Eatual == preparacao) begin 
+		    Dificuldade <= chaveDificuldade;
+		end
 
         // Saida de depuracao (estado)
         case (Eatual)
             inicial:                db_estado <= 4'b0000;  // 0
             preparacao:             db_estado <= 4'b0001;  // 1
-            inicia_sequencia:       db_estado <= 4'b0010;  // 2
+            proxima_mostra:         db_estado <= 4'b0010;  // 2
             espera_jogada:          db_estado <= 4'b0011;  // 3
             registra_jogada:        db_estado <= 4'b0100;  // 4
             compara_jogada:         db_estado <= 4'b0101;  // 5
             proxima_jogada:         db_estado <= 4'b0110;  // 6
             foi_ultima_sequencia:   db_estado <= 4'b0111;  // 7
             proxima_sequencia:      db_estado <= 4'b1000;  // 8
-			   final_timeout:	 	    db_estado <= 4'b1101;  // D
+            mostra_jogada:          db_estado <= 4'b1001;  // 9
+            intervalo_mostra:       db_estado <= 4'b1010;  // A
+            final_timeout:	 	    db_estado <= 4'b1101;  // D
             final_acertou:          db_estado <= 4'b1110;  // E
             final_errou:            db_estado <= 4'b1111;  // F
             default:                db_estado <= 4'b1001;  // 9 ERRO
