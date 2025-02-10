@@ -74,7 +74,7 @@ module fluxo_dados (
    
 	 
 	 // contador_m
-    contador_m  #(.M(16),.N(16)) contadorLmt (
+    contador_m  #(.M(16),.N(4)) contadorLmt (
        .clock     (clock),   
        .zera_as   (zeraL),
        .zera_s    (1'b0),
@@ -92,7 +92,7 @@ module fluxo_dados (
        .conta	  (contaM),
        .Q         (),
        .fim       (fimM),
-       .meio      (meioL)
+       .meio      (meioM)
     );
 	 
 	 // contador_m
@@ -161,5 +161,6 @@ module fluxo_dados (
     assign jogada_feita = s_jogada;
     assign db_tem_jogada = sinal;
     assign db_limite = s_limite;
+    assign leds = s_leds;
 
  endmodule

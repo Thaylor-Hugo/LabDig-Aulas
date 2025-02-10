@@ -20,7 +20,7 @@ module mux3x1 (
     input [3:0] D1,
     input [3:0] D2,
     input [1:0] SEL,
-    output [3:0] reg OUT
+    output reg [3:0] OUT
 );
 
 always @(*) begin

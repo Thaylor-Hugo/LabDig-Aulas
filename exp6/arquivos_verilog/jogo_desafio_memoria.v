@@ -21,6 +21,7 @@ module jogo_desafio_memoria (
     output ganhou,
     output perdeu,
     output pronto,
+	output timeout,
     output [6:0] db_contagem,
     output [6:0] db_memoria,
     output [6:0] db_estado,
@@ -30,9 +31,8 @@ module jogo_desafio_memoria (
     output db_igual,
     output db_iniciar,
     output db_tem_jogada,
-	output db_timeout,
 	output db_dificuldade,
-    output db_selMux
+    output [1:0] db_selMux
 );
 
 
@@ -42,10 +42,9 @@ wire s_fimE, s_fimL, s_botoes_igual_memoria,s_meioL, s_dificuldade, s_zeraE, s_z
 wire s_zeraR, s_registraR, s_jogada, s_timeout, s_contaT, s_endereco_igual_limite, s_endereco_menor_limite;
 wire s_zeraM, s_contaM, s_meioM, s_fimM;
 
-assign db_iniciar = iniciar;
+assign db_iniciar = jogar;
 assign db_clock = clock;
 assign db_igual = s_botoes_igual_memoria;
-assign db_timeout = s_timeout;
 assign db_dificuldade = s_dificuldade;
 assign db_selMux = s_selMux;
 
@@ -70,6 +69,7 @@ unidade_controle controlUnit (
     .acertou                (ganhou),
     .errou                  (perdeu),
     .pronto                 (pronto),
+    .fim_timeout            (timeout),
     .db_estado              (s_estado),
 	.contaT                 (s_contaT),
 	.db_dificuldade 			(s_dificuldade),

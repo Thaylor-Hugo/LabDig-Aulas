@@ -41,6 +41,7 @@ module unidade_controle (
     output reg acertou,
     output reg errou,
     output reg pronto,
+    output reg fim_timeout,
     output reg [3:0] db_estado,
 	 output reg contaT,
 	 output  db_dificuldade
@@ -58,6 +59,7 @@ module unidade_controle (
     parameter proxima_sequencia     = 4'b1000;  // 8
     parameter mostra_jogada         = 4'b1001;  // 9
     parameter intervalo_mostra      = 4'b1010;  // A
+    parameter inicia_sequencia      = 4'b1011;  // B
     parameter final_timeout 	    = 4'b1101;  // D
     parameter final_acertou         = 4'b1110;  // E
     parameter final_errou           = 4'b1111;  // F
@@ -85,10 +87,10 @@ module unidade_controle (
         case (Eatual)
             inicial:          Eprox <= iniciar ? preparacao : inicial;
             preparacao:       Eprox <= mostra_jogada;
-            mostra_jogada:    Eprox <= meioM ? intervalo_mostra : intervalo_mostra;
-            intervalo_mostra: Eprox <= fimM ? espera_jogada : proxima_mostra;
-            proxima_mostra:   Eprox <= enderecoIgualLimite ? espera_jogada : mostra_jogada;
-            
+            mostra_jogada:    Eprox <= meioM ? intervalo_mostra : mostra_jogada;
+            intervalo_mostra: Eprox <= fimM ? proxima_mostra : intervalo_mostra;
+            proxima_mostra:   Eprox <= enderecoIgualLimite ? inicia_sequencia : mostra_jogada;
+            inicia_sequencia: Eprox <= espera_jogada;
             espera_jogada:    begin 
                 if (jogada) begin
 					Eprox <= registra_jogada;
@@ -111,7 +113,7 @@ module unidade_controle (
             proxima_jogada:         Eprox <= espera_jogada;
             foi_ultima_sequencia:   Eprox <= (fimL || (meioL && ~Dificuldade)) ? final_acertou : proxima_sequencia;
             proxima_sequencia:      Eprox <= mostra_jogada;
-            final_timeout:          Eprox <= iniciar ? preparacao : final_timeout;w
+            final_timeout:          Eprox <= iniciar ? preparacao : final_timeout;
             final_errou:            Eprox <= iniciar ? preparacao : final_errou;
             final_acertou:          Eprox <= iniciar ? preparacao : final_acertou;
             default:                Eprox <= inicial;
@@ -122,22 +124,23 @@ module unidade_controle (
     always @* begin
         zeraL     	<= (Eatual == inicial || Eatual == preparacao) ? 1'b1 : 1'b0;
         zeraR     	<= (Eatual == inicial || Eatual == preparacao) ? 1'b1 : 1'b0;
-        zeraE     	<= (Eatual == inicial || Eatual == preparacao || Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
+        zeraE     	<= (Eatual == inicial || Eatual == preparacao || Eatual == proxima_sequencia || Eatual == inicia_sequencia) ? 1'b1 : 1'b0;
         registraR 	<= (Eatual == registra_jogada) ? 1'b1 : 1'b0;
         contaL    	<= (Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
-        contaE    	<= (Eatual == proxima_jogada) ? 1'b1 : 1'b0;
+        contaE    	<= (Eatual == proxima_jogada || Eatual == proxima_mostra) ? 1'b1 : 1'b0;
         pronto    	<= (Eatual == final_acertou || Eatual == final_errou || Eatual == final_timeout) ? 1'b1 : 1'b0;
         acertou   	<= (Eatual == final_acertou) ? 1'b1 : 1'b0;
         errou     	<= (Eatual == final_errou) ? 1'b1 : 1'b0;
 		contaT	   	<= (Eatual == espera_jogada) ? 1'b1 : 1'b0;
-		zeraM       <= (Etaual == preparacao || Eatual == proxima_mostra || Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
+		zeraM       <= (Eatual == preparacao || Eatual == proxima_mostra || Eatual == proxima_sequencia) ? 1'b1 : 1'b0;
         contaM      <= (Eatual == mostra_jogada || Eatual == intervalo_mostra) ? 1'b1 : 1'b0;
-        if (Eatual == intervalo_mostra) begin
-            seletor <= 1'b00;
+        fim_timeout <= (Eatual == final_timeout) ? 1'b1 : 1'b0;
+        if (Eatual == registra_jogada || Eatual == proxima_jogada || Eatual == compara_jogada || Eatual == foi_ultima_sequencia) begin
+            seletor <= 2'b10;
         end else if (Eatual == mostra_jogada) begin
-            seletor <= 1'b01;
+            seletor <= 2'b01;
         end else begin
-            seletor <= 1'b10;
+            seletor <= 2'b00;
         end
 
         if (Eatual == preparacao) begin 
@@ -157,6 +160,7 @@ module unidade_controle (
             proxima_sequencia:      db_estado <= 4'b1000;  // 8
             mostra_jogada:          db_estado <= 4'b1001;  // 9
             intervalo_mostra:       db_estado <= 4'b1010;  // A
+            inicia_sequencia:       db_estado <= 4'b1011;  // B
             final_timeout:	 	    db_estado <= 4'b1101;  // D
             final_acertou:          db_estado <= 4'b1110;  // E
             final_errou:            db_estado <= 4'b1111;  // F
